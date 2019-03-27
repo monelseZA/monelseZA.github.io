@@ -9,8 +9,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <!-- <link rel="stylesheet" href="styles.4a2706caecf62b187ba2.css"> -->
-  <link rel="stylesheet" href="orginal.css">
+  <link rel="stylesheet" href="styles.4a2706caecf62b187ba2.css"> 
+  <!-- <link rel="stylesheet" href="orginal.css"> -->
 </head>
 <header style="background-color:black;height:50vh">
 </header>
@@ -23,10 +23,10 @@
 				<img id="profile" src="">
 			</div>
 			<p id="user_title"></p>
-			<p id="user_value" style="text-transform: lowercase;"></p>
+			<p id="user_value" style="text-transform: capitalize;"></p>
 		</div>
 		<ul class="values_list horizontal_center" id="values_list">
-			<li data-title="Hi, My name is" data-value="" data-label="name" class="" id="name"><img src="./assets/icons/svg/account/login.svg"></li>
+			<li data-title="Hi, My name is" data-value="" data-label="name" class="active" id="name"></li>
 			<li data-title="My email address is" data-value="" data-label="email" data-caps="false" class="" id="email"></li>
 			<li data-title="My birthday is" data-value="" data-label="birthday" class="" id="birthday"></li>
 			<li data-title="My address is" data-value="" data-label="location" class="" id="address"></li>
@@ -44,16 +44,47 @@ $.ajax({
   success: function(data) {
     console.log(data);
     // $("#user_photo").html(data.results[0].user.picture);
+
     $("#profile").attr("src",data.results[0].picture.large);
     $("#name").attr("data-value",data.results[0].name.first);
     $("#email").attr("data-value",data.results[0].email);
-    $("#birthday").attr("data-value",data.results[0].dob.date);
+    $("#birthday").attr("data-value",formatDate(data.results[0].dob.date));
     $("#address").attr("data-value",data.results[0].location.street);
     $("#phone").attr("data-value",data.results[0].phone);
     $("#password").attr("data-value",data.results[0].login.password);
   }
 });
 
+$("li").hover(
+    function() {
+    	// console.log($("#values_list"));
+		$('#values_list').children('li').each(function () {
+    		console.log(this);
+    		$(this).removeClass('active');
 
+		});
+
+        $(this).addClass('active');
+        $('#user_title').html($(this).attr("data-title"));
+        $('#user_value').html($(this).attr("data-value"));
+    }, function() {
+        if(!$( this).hasClass('clicked') ){
+
+            // $( this ).removeClass('active');
+        }
+    }
+);
+
+function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('/');
+}
 </script>
 </html>
